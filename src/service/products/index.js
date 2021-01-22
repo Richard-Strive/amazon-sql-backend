@@ -109,27 +109,3 @@ router.post("/upload", (req, res) => {
 });
 
 module.exports = router;
-
-// router.get("/test/:id2", async (req, res, next) => {
-//   try {
-//     const { rows } = await db.query(
-//       `SELECT * FROM aricle WHERE brand LIKE '%${req.params.id2}%'`
-//     );
-//     res.send(rows);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send(error);
-//   }
-// });
-
-// router.post("/product/:id/upload", async (req, res, next) => {
-//   try {
-//     const { rows } = await db.query(
-//       `SELECT * FROM aricle WHERE id=${parseInt(req.params.id)}`
-//     );
-//     res.send(rows);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send(error);
-//   }
-// });
