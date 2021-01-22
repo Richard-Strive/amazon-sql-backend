@@ -3,7 +3,7 @@ const db = require("../../secretWeapons/db");
 
 router.get("/", async (req, res, next) => {
   try {
-    const { rows } = await db.query(`SELECT * FROM products`);
+    const { rows } = await db.query(`SELECT * FROM reviews`);
     res.send(rows);
   } catch (error) {
     console.log(error);
@@ -13,16 +13,8 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const {
-      id,
-      name,
-      description,
-      brand,
-      imageurl,
-      price,
-      category,
-    } = req.body;
-    const query = `INSERT INTO products (name, description, brand, imageurl, price, category) VALUES ('${name}','${description}','${brand}', '${imageurl}', '${price}', '${category}');`;
+    const { id, comment, rate, products_id } = req.body;
+    const query = `INSERT INTO reviews (comment,  rate,  products_id) VALUES ('${comment}','${rate}','${products_id}');`;
     const result = await db.query(query);
     res.send(result);
   } catch (error) {
@@ -33,16 +25,8 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const {
-      id,
-      name,
-      description,
-      brand,
-      imageurl,
-      price,
-      category,
-    } = req.body;
-    const query = `UPDATE products SET name='${name}', description='${description}', brand='${brand}', imageurl='${imageurl}', price='${price}', category='${category}' WHERE id=${parseInt(
+    const { id, comment, rate, products_id } = req.body;
+    const query = `UPDATE reviews SET comment='${comment}',rate='${rate}', products_id='${products_id}' WHERE id=${parseInt(
       req.params.id
     )};`;
     const result = await db.query(query);
@@ -56,7 +40,7 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { rows } = await db.query(
-      `DELETE FROM products WHERE id=${parseInt(req.params.id)}`
+      `DELETE FROM reviews WHERE id=${parseInt(req.params.id)}`
     );
     res.send(rows);
   } catch (error) {
@@ -64,3 +48,5 @@ router.delete("/:id", async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+module.exports = router;
