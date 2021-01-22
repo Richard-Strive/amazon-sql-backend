@@ -1,5 +1,22 @@
 const router = require("express").Router();
+const multer = require("multer");
+const path = require("path");
 const db = require("../../secretWeapons/db");
+
+const storage1 = multer.diskStorage({
+  destination: "./public/uploads/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage1,
+  limits: { fileSize: 100000000 },
+}).single("img");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -65,20 +82,34 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+router.get("/:id/reviews", async (req, res, next) => {
+  try {
+    const { rows } = await db.query(
+      `SELECT reviews.comment FROM products INNER JOIN reviews ON products.id=products_id WHERE products.id=${parseInt(
+        req.params.id
+      )}`
+    );
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+router.post("/upload", (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      res.render("index", { msg: err });
+    } else {
+      console.log(req.file.filename);
+
+      res.send("test");
+    }
+  });
+});
+
 module.exports = router;
 
-// router.get("/test", async (req, res, next) => {
-//   try {
-//     const {
-//       rows,
-//     } = await db.query(`SELECT * FROM public.authors INNER JOIN public.aricle ON authors_id=authors.id
-//     INNER JOIN public.category ON aricle_id=aricle.id`);
-//     res.send(rows);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send(error);
-//   }
-// });
 // router.get("/test/:id2", async (req, res, next) => {
 //   try {
 //     const { rows } = await db.query(
@@ -90,7 +121,8 @@ module.exports = router;
 //     res.status(500).send(error);
 //   }
 // });
-// router.get("/:id", async (req, res, next) => {
+
+// router.post("/product/:id/upload", async (req, res, next) => {
 //   try {
 //     const { rows } = await db.query(
 //       `SELECT * FROM aricle WHERE id=${parseInt(req.params.id)}`

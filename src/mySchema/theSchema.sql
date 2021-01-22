@@ -46,3 +46,4 @@ reviews(
         "createdAt": "2019-08-01T12:46:45.895Z"  //SERVER GENERATED
     },
 */
+    -- ts TIMESTAMP,

@@ -4,6 +4,7 @@ const service = require("./src/service");
 const server = express();
 
 server.use(express.json());
+server.use(express.static("/public"));
 server.use(cors());
 
 const PORT = process.env.PORT || 5001;
